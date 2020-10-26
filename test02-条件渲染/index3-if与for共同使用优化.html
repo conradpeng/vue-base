@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <ul>
+            <!-- for的优先级高于if，因此这种写法会在每次循环时都进行一次if判断 -->
+            <li v-for="(item, index) in cities" :key="index" v-if="flag">{{item.name}}</li><br>
+            <!-- 优化方法，使用template -->
+            <template v-if="flag">
+                <li v-for="item in cities">
+                    {{item.name}}
+                </li>
+            </template>
+            <br>
+
+            <!-- 同理，筛选不用的数据时，也会在每次循环都判断一次 -->
+            <li v-for="item in cities" v-if="item.count != 1">{{item.name}}</li><br>
+            <!-- 推荐使用属性计算，提前处理好想要的数据 -->
+            <li v-for="item in southcities">{{item.name}}</li><br>
+        </ul>
+    </div>
+</body>
+<script>
+    const app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                flag: true,
+                cities: [
+                    {count: 1, name: '北京'},
+                    {count: 2, name: '上海'},
+                    {count: 3, name: '广州'}
+                ]
+            }
+        },
+        computed: {
+            southcities:function(){
+                const newc = JSON.parse(JSON.stringify(this.cities));
+                return newc.splice(1,2);
+            }
+        },
+    })
+</script>
+</html>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贪吃蛇-老活新整</title>
+</head>
+<style>
+    select{
+        width: 100px;
+        margin-right: 50px;
+    }
+    
+    table{
+        border: 1px #ccc solid;
+        border-collapse: collapse;
+        margin:auto;padding:0;
+        text-align: center;
+    }
+    
+    td{
+        width: 20px;
+        height: 20px;
+    }
+
+    .bodyClass{
+        background-color: rgb(71, 83, 41);
+    }
+    .headClass{
+        background-color: rgb(71, 83, 41);
+    }
+    .foodClass{
+        position:relative;
+        display:block;
+        background-color: rgb(248, 218, 48);
+        -webkit-border-radius: 63px 63px 63px 63px / 108px 108px 72px 72px;
+        border-radius:         50%  50%  50%  50%  / 60%   60%   40%  40%;;
+    }
+
+    .tailClass{
+        background-color: rgb(71, 83, 41);
+    }
+    .leftTail{
+        border-radius: 100px 0 0 100px;
+    }
+    .leftHead{
+        position:relative;
+        border-radius: 100px 0 0 100px;
+    }
+    .leftHead:after{
+        content: "";
+        position: absolute;
+        top: 13px;
+        left: 8px;
+        width: 4px;
+        height: 4px;
+        background-color: rgb(252, 252, 247);
+        border-radius: 50%;;
+    }
+    .leftHead:before{
+        content: "";
+        position: absolute;
+        top: 5px;
+        left: 8px;
+        width: 4px;
+        height: 4px;
+        background-color: rgb(247, 247, 242);
+        border-radius: 50%;
+    }
+    .rightTail{
+        border-radius: 0 100px 100px 0;
+    }
+    .rightHead{
+        position:relative;
+        border-radius: 0 100px 100px 0;
+    }
+    .rightHead:after{
+        content: "";
+        position: absolute;
+        top: 13px;
+        left: 8px;
+        width: 4px;
+        height: 4px;
+        background-color: rgb(252, 252, 247);
+        border-radius: 50%;;
+    }
+    .rightHead:before{
+        content: "";
+        position: absolute;
+        top: 5px;
+        left: 8px;
+        width: 4px;
+        height: 4px;
+        background-color: rgb(247, 247, 242);
+        border-radius: 50%;
+    }
+    .upTail{
+        border-radius: 100px 100px 0 0;
+    }
+    .upHead{
+        position:relative;
+        border-radius: 100px 100px 0 0;
+    }
+    .upHead:after{
+        content: "";
+        position: absolute;
+        top: 8px;
+        left: 13px;
+        width: 4px;
+        height: 4px;
+        background-color: rgb(252, 252, 247);
+        border-radius: 50%;;
+    }
+    .upHead:before{
+        content: "";
+        position: absolute;
+        top: 8px;
+        left: 5px;
+        width: 4px;
+        height: 4px;
+        background-color: rgb(247, 247, 242);
+        border-radius: 50%;
+    }
+    .downTail{
+        border-radius: 0 0 100px 100px;
+    }
+    .downHead{
+        position:relative;
+        border-radius: 0 0 100px 100px;
+    }
+    .downHead:after{
+        content: "";
+        position: absolute;
+        top: 8px;
+        left: 13px;
+        width: 4px;
+        height: 4px;
+        background-color: rgb(252, 252, 247);
+        border-radius: 50%;;
+    }
+    .downHead:before{
+        content: "";
+        position: absolute;
+        top: 8px;
+        left: 5px;
+        width: 4px;
+        height: 4px;
+        background-color: rgb(247, 247, 242);
+        border-radius: 50%;
+    }
+
+    .luBody{
+        background-color: rgb(71, 83, 41);
+        border-radius: 100% 0 0 0;
+    }
+    .ruBody{
+        background-color: rgb(71, 83, 41);
+        border-radius: 0 100px 0 0;
+    }
+    .rdBody{
+        background-color: rgb(71, 83, 41);
+        border-radius: 0 0 100px 0;
+    }
+    .ldBody{
+        background-color: rgb(71, 83, 41);
+        border-radius: 0 0 0 100px;
+    }
+</style>
+<body>
+    <div id="app">
+        <div class="luBody"></div>
+        <span>贪吃蛇 </span>得分：<span id = "score" > {{score}}</span><br>
+        地图大小：
+        <select id = "mapsize" v-model="mapSizeNum" :disabled="forbiddenClass">
+            <option value = "1">小</option>
+            <option value = "2">中</option>
+            <option value = "3">大</option>
+        </select>
+        游戏模式：
+        <select id = "mapsize" v-model="gameMode" :disabled="forbiddenClass">
+            <option value = "0">闯关模式</option>
+            <option value = "1">无尽模式</option>
+        </select>
+        <button id = "startbutton" @click="gamestart" :disabled="forbiddenClass">{{buttonContent}}</button>
+        <hr/>
+        <div id = "gamearea" >
+            <table>
+                <tr v-for="(yTags, index) in mapTags" :key="index"> 
+                    <td v-for="(xTags, index2) in yTags" :key="index2" 
+                    :x="index2+1" 
+                    :y="mapSize.y - index" 
+                    :state="xTags.state" 
+                    :class="{
+                        foodClass: xTags.state == 1, 
+                        bodyClass: xTags.state == 3, 
+                        headClass: xTags.state == 2,
+                        tailClass: xTags.state == 4,
+                        luBody: xTags.state == 7, 
+                        ruBody: xTags.state == 5, 
+                        rdBody: xTags.state == 8, 
+                        ldBody: xTags.state == 6, 
+                        upTail: directionTail == 0 && xTags.state == 4,
+                        rightTail: directionTail == 1 && xTags.state == 4,
+                        downTail: directionTail == 2 && xTags.state == 4,
+                        leftTail: directionTail == 3 && xTags.state == 4,
+                        upHead: directionHead == 0 && xTags.state == 2,
+                        rightHead: directionHead == 1 && xTags.state == 2,
+                        downHead: directionHead == 2 && xTags.state == 2,
+                        leftHead: directionHead == 3 && xTags.state == 2
+                    }"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    const app = new Vue({
+        el : '#app',
+        data() {
+            return {
+                score: 0,        //得分
+                gameMapHtml: "", //地图的html
+                mapSizeNum: 1,   //地图大小等级
+                moveSpeed: 1,    //移动速度
+                gameMode: 0,     //游戏模式 0通关模式 1无尽模式
+                
+                food:{},      //食物所在坐标
+                snakeHead: {},//蛇头的坐标
+                snakeTail: {},//蛇尾的坐标
+                snakeBody: [],//蛇的身体所在坐标集合
+                canSnakeTurn: false,//方向锁
+
+                direction: 1, //运动方向 0上  1右  2下  3左
+                directionHead: 1,//蛇头的class使用，蛇头在变化后所指方向，目的是不使头脱离
+                directionTail: 3,//蛇尾的class使用，蛇尾所指方向
+
+                forbiddenClass: false,//禁用select的class
+                buttonContent:'开始' ,
+
+                snakeMoveInterval: 0//蛇运动用的定时器
+            }
+        },
+        computed: {
+            //地图大小
+            mapSize : function(){
+                let x = this.mapSizeNum * 15;
+                let y = this.mapSizeNum * 10;
+                return {x, y};
+            },
+            //真正的蛇的身体的数组（不包含头）
+            realSnakeBody: function(){
+                let realSnakeBody = JSON.parse(JSON.stringify(this.snakeBody));
+                realSnakeBody.pop();
+                return realSnakeBody;
+            },
+            //定时器延时
+            delayer : function(){
+                return 500 - this.moveSpeed * 100;
+            },
+            //地图画布
+            mapTags: function(){
+                let mapTags = [];
+                for (let y = 1; y <= this.mapSize.y; y++) {
+                    let xTags = [];
+                    for (let x = 1; x <= this.mapSize.x; x++) {
+                        let yTags = {state: 0};
+                        if(x == this.food.x && this.mapSize.y-y+1 == this.food.y){
+                            yTags = {state: 1};
+                        }
+                        this.snakeBody.forEach((element,index) => {
+                            
+                            if(x == element.x && this.mapSize.y-y+1 == element.y){
+                                //默认先把身体的所有部分标记为身体
+                                yTags = {state: 3};
+                                //标记出转弯处的圆滑身体（用于渲染转弯处身体的式样）
+                                //先排除首尾
+                                if(index != 0 && index != this.snakeBody.length-1){
+                                    let beforeBody = this.snakeBody[index + 1];
+                                    let nextBody = this.snakeBody[index - 1];
+                                    let xDiff = beforeBody.x - nextBody.x;
+                                    let yDiff = beforeBody.y - nextBody.y;
+                                    //如果当前身体的前后两块 xy两轴都不在同一个轴上，则说明该部位是拐角处
+                                    if(xDiff && yDiff){
+                                        let directionBody = xDiff + '' + yDiff;
+                                        let state;
+                                        //在和本体比一下，总共划分成8象限，四类：左上 左下 右上 右下
+                                        xDiff2 = element.x - beforeBody.x;
+                                        if(directionBody == '-11' && xDiff2 >  0 || 
+                                           directionBody == '1-1' && xDiff2 == 0){
+                                            //右上
+                                            state = 5;
+                                        }else if(directionBody == '-11' && xDiff2 == 0 ||
+                                                 directionBody == '1-1'  && xDiff2 < 0){
+                                            //左下
+                                            state = 6;
+                                        }else if(directionBody == '11'   && xDiff2 < 0 ||
+                                                 directionBody == '-1-1' && xDiff2 == 0){
+                                            //左上
+                                            state = 7;
+                                        }else{
+                                            //右下
+                                            state = 8;
+                                        }
+                                        yTags = {state};
+                                    }
+                                }
+                            }
+
+                        });
+                        //标记出尾部
+                        if(x == this.snakeTail.x && this.mapSize.y-y+1 == this.snakeTail.y){
+                            yTags = {state: 4}
+                        }
+                        //标记出头部
+                        if(x == this.snakeHead.x && this.mapSize.y-y+1 == this.snakeHead.y){
+                            yTags = {state: 2};
+                        }
+                        xTags.push(yTags);
+                    }
+                    mapTags.push(xTags);
+                }
+                return mapTags;
+            }
+        },
+        methods: {
+            //游戏开始
+            gamestart: function(){
+                //禁用选项
+                this.forbiddenClass = true;
+                //生成蛇
+                this.createSnake();
+                //生成食物
+                this.createFood();
+                //蛇的运动
+                this.createSnakeMove();
+                //全局键盘事件
+                this.keyboardWatch();
+            },
+            //生成蛇
+            createSnake: function(){
+                //蛇的初始长度是3
+                let slength = 3;
+                //蛇头初始坐标
+                let x = Math.floor(this.mapSize.x / 2);
+                let y = Math.ceil(this.mapSize.y / 2);
+                this.snakeHead = {x,y};
+                //蛇的身体加入数组
+                for (let x = this.snakeHead.x - 2; x <= this.snakeHead.x; x++) {
+                    this.snakeBody.push({x, y: this.snakeHead.y});
+                }
+                this.snakeTail = this.snakeBody[0];
+            },
+            //生成食物
+            createFood: function(){
+                //食物所在坐标在蛇身以外的位置
+                xfood = Math.floor(Math.random()*this.mapSize.x) + 1;
+                yfood = Math.floor(Math.random()*this.mapSize.y) + 1;
+                //
+                var ifFoodInSnakeBody = this.snakeBody.some(item=>{
+                    if(item.x == xfood && item.y == yfood){
+                        return true;
+                    }
+                })
+                if(ifFoodInSnakeBody){
+                    this.createFood();
+                }else{
+                    this.food = {x: xfood, y: yfood};
+                }
+            },
+            //创建蛇运动的定时器
+            createSnakeMove: function(){
+                this.snakeMoveInterval = setInterval(this.snakeMove, this.delayer);
+            },
+            //蛇的运动
+            snakeMove: function(){
+                    //初始移动方向。向右
+                    switch (this.direction) {
+                        case 0://上
+                            this.snakeHead.y = this.snakeHead.y + 1;
+                            break;
+                        case 2://下
+                            this.snakeHead.y = this.snakeHead.y - 1;
+                            break;
+                        case 3://左
+                            this.snakeHead.x = this.snakeHead.x - 1;
+                            break;
+                        default://右
+                            this.snakeHead.x = this.snakeHead.x + 1;
+                            break;
+                    }
+                    this.directionHead = this.direction;
+
+
+                    let newSnakeHead = JSON.parse(JSON.stringify(this.snakeHead));//重新拷贝蛇头对象
+                    //在蛇的身体数组中添加进新的蛇头，删除掉蛇尾
+                    this.snakeBody.push(newSnakeHead);
+
+                    //吃食物
+                    if(JSON.stringify(this.snakeHead) == JSON.stringify(this.food)){//吃下食物，不动蛇尾
+                        this.createFood();
+                        this.score += 100;
+                        if(this.gameMode == 1){//无尽模式
+                            //每增长1000分速度提升
+                            if(this.score % 1000 == 0){
+                                this.moveSpeed++;
+                                clearInterval(this.snakeMoveInterval);
+                                this.createSnakeMove();
+                            }
+                        }
+                        if(this.gameMode == 0){//闯关模式
+                            //到达一定分值之后，重置地图，提升速度，分数累计
+                            //到达一个最大值后，通关游戏结束
+                        }
+                    }else{//正常运动，删掉蛇尾
+                        this.snakeBody.shift();
+                    }
+                    this.snakeTail = this.snakeBody[0];
+
+                    //在尾巴生成后，根据倒数第二位的格子获取实时的尾巴的方向(用于渲染尾巴的式样)
+                    let secondToLast = this.snakeBody[1];
+                    if(secondToLast){
+                        let xDiff = this.snakeTail.x - secondToLast.x;
+                        let yDiff = this.snakeTail.y - secondToLast.y;
+                        if(xDiff > 0){
+                            this.directionTail = 1;
+                        }
+                        if(xDiff < 0){
+                            this.directionTail = 3;
+                        }
+                        if(yDiff > 0){
+                            this.directionTail = 0;
+                        }
+                        if(yDiff < 0){
+                            this.directionTail = 2;
+                        }
+                    }
+
+                    //死亡(撞墙， 撞到自己的身体)
+                    if(JSON.stringify(this.realSnakeBody).search(JSON.stringify(this.snakeHead)) != -1){
+                        this.gameOver(0);
+                    }
+                    if(this.snakeHead.x < 1              || this.snakeHead.y < 1 || 
+                       this.snakeHead.x > this.mapSize.x || this.snakeHead.y > this.mapSize.y){
+                        this.gameOver(1);
+                    }
+                    this.canSnakeTurn = true;
+            },
+            //游戏结束
+            gameOver: function(type){
+                let msg = ['撞到身体了', '撞到墙了！'];
+                console.log('游戏结束。。' + msg[type]);
+                alert(msg[type]);
+                window.clearInterval(this.snakeMoveInterval);
+                this.resetGame();
+            },
+            //重置游戏
+            resetGame: function(){
+                //初始化全部数据
+                Object.assign(this.$data, this.$options.data());
+                this.forbiddenClass = false;
+                this.buttonContent = '重新开始';
+            },
+            //改变运动方向
+            changeSnakeMoveDirection : function(direction) {
+                //解决方向冲突问题
+                let check = Math.abs(this.direction - direction);
+                if(check == 2 || check == 0){
+                    return false;
+                }
+                this.direction = direction;
+            },
+            //监听按键
+            keyboardWatch : function()
+            {
+                this.canSnakeTurn = true;
+                document.onkeydown = (event) => {
+                    if(this.canSnakeTurn){
+                        if(event.keyCode == 87 || event.keyCode == 38){ // 'w' 'up'
+                            this.changeSnakeMoveDirection(0);
+                        }else if(event.keyCode == 68 || event.keyCode == 39){ // 'd' 'right'
+                            this.changeSnakeMoveDirection(1);
+                        }else if(event.keyCode == 83 || event.keyCode == 40){ // 's' 'down'
+                            this.changeSnakeMoveDirection(2);
+                        }else if(event.keyCode == 65 || event.keyCode == 37){ // 'a' 'left'
+                            this.changeSnakeMoveDirection(3);
+                        }
+                    }
+                    //在定时器完整执行一次之前都不能再按键
+                    this.canSnakeTurn = false;
+                }
+            }
+        },
+    })
+</script>
+</html>

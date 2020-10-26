@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div :style="'color:red'">2222</div>
+        <div :style="{color:'red'}">3333</div>
+        <div :style="'color:red; font-size:23px'">4444</div>
+        <div :style="{color:'red', fontSize:'23px'}">5555</div>
+        <div :style="styleObj">6666</div>
+        <ul>
+            <li v-for="i in 10">
+                <!-- 字符串写法 -->
+                <div :style="'font-size:'+i+'0px'">{{i}}</div>
+                <!-- 对象写法 -->
+                <div :style="{fontSize:i*10+'px'}">{{i}}</div>
+            </li>
+        </ul>
+    </div>
+</body>
+<script>
+    let vm = new Vue({
+        el: "#app",
+        data() {
+            return {
+                styleObj:{
+                    color:'red',
+                    fontSize:'30px'
+                }
+            }
+        },
+    })
+</script>
+</html>

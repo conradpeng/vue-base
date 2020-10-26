@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input type="text" name="firstName" id="" v-model="firstName">
+        <input type="text" name="lastName" id="" v-model="lastName">
+        {{fullName}}
+
+        <input type="text" name="name2" id="" v-model="name2">
+        {{name2}}
+
+        <input type="range" name="" id="" v-model="fontSize">
+    </div>
+</body>
+<script>
+    let vm = new Vue({
+        el: "#app",
+        data() {
+            return {
+                firstName: "jack",
+                lastName: "jho",
+                name2: "as",
+                fontSize: 23
+            }
+        },
+        computed: {
+            fullName : function(){
+                return this.firstName + ' ' + this.lastName;
+            }
+        },
+        watch: {
+            name2 : function(newValue, oldValue){
+                if(newValue == "233"){
+                    this.firstName = "2333",
+                    this.name2 = oldValue
+                }
+            },
+            fontSize: function(newValue, oldValue){
+                if(newValue > 50){
+                    this.fontSize = oldValue
+                }
+            }
+        },
+    })
+</script>
+</html>

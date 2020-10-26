@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        img{
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <userlistcom v-bind:getuserlist="userlist"></userlistcom>
+        <formcom v-on:datasubmit="getsubmit" ref="formcom"></formcom>
+        <button @click="clear">清空</button>
+    </div>
+    <template id="formcom">
+        <div>
+            <form action="">
+                姓名<input type="text" name="name" id="" v-model="newuser.name"> <br>
+                年龄<input type="text" name="age" id="" v-model="newuser.age"><br>
+                头像<input type="text" name="img" id="" v-model="newuser.img"><br>
+                性别<select name="sex" id="" v-model="newuser.sex">
+                    <option :value="sex.num" v-for="sex in sexlist">
+                        {{sex.content}}
+                    </option>
+                </select>
+                <button type="submit" @click.prevent="submit">注册</button>
+            </form>
+        </div>
+    </template>
+    <template id="userlistcom">
+        <div>
+            <ul>
+                <li v-for="user in getuserlist">
+                    <img :src="user.img" alt="">
+                    <span>{{user.name}}</span>
+                    <span>{{user.age}}</span>
+                    <span>{{user.sex == 1 ? '男' : '女'}}</span>
+                </li>
+            </ul>
+        </div>
+    </template>
+</body>
+<script>
+    let vm = new Vue({
+        el: "#app",
+        data() {
+            return {
+                userlist:[]
+            }
+        },
+        components : {
+            'userlistcom' : {
+                template : '#userlistcom',
+                props : {
+                    getuserlist : {
+                        type: Array,
+                        required: true
+                    }
+                }
+            },
+            'formcom' : {
+                template : '#formcom',
+                data() {
+                    return {
+                        sexlist : [
+                            {num : 1, content: '男'},
+                            {num : 2, content: '女'}
+                        ],
+                        newuser : {}
+                    }
+                },
+                methods: {
+                    submit : function(){
+                        this.$emit('datasubmit', this.newuser);
+                    },
+                    clearForm : function(){
+                        this.newuser = {};
+                    }
+                },
+            }
+        },
+        created() {
+            this.init();  
+        },
+        methods: {
+            getsubmit : function(newuser){
+                newuser = JSON.parse(JSON.stringify(newuser));
+                this.userlist.push(newuser);
+            },
+            clear : function(){
+                //可以调用方法
+                //this.$refs.formcom.clearForm();
+                //也可以直接操作数据
+                this.$refs.formcom.newuser = {};
+            },
+            init : function(){
+                this.userlist = [
+                    {
+                        name:"张三",
+                        age:"20",
+                        sex:"1",
+                        img:"https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=682895161,2056544872&fm=111&gp=0.jpg",
+                        remember: 1,
+                        area:"3"
+                    },
+                    {
+                        name:"小花",
+                        age:"22",
+                        sex:"2",
+                        img:"https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3999162594,1780997618&fm=111&gp=0.jpg",
+                        remember: 0,
+                        area:"2"
+                    }
+                ];
+            }
+        },
+    })
+</script>
+</html>

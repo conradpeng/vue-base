@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义指令</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div v-red>aaaaa</div>
+        <div v-color="'red'">bbbbb</div>
+    </div>
+</body>
+<script>
+    Vue.directive('red', {
+        bind : function(el){
+            el.style.backgroundColor = 'red';
+        }
+    });
+    let vm = new Vue({
+        el : '#app',
+        data() {
+            return {
+                
+            }
+        },
+        directives:{
+            'color':{
+                bind : function(el, val){
+                    el.style.color = val.value;
+                    console.log(val);
+                },
+                inserted : function(){
+
+                }
+            }
+        }
+    })
+</script>
+</html>

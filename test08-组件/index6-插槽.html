@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>插槽</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- 组件标签不写入内容时，slot标签的内容会作为默认值显示 -->
+        <html1></html1>
+        <html1></html1>
+        <!-- 组件内部写入动态内容后，就会被组件里的slot标签所接收 -->
+        <html1>zhaosi</html1>
+        <html1>hanmeimei</html1>
+
+        <html2></html2>
+        <!-- 命名插槽无法接收没有v-slot的动态内容 -->
+        <html2>zhaosi</html2>
+        <!-- 如果slot规定了name，那么只有v-slot才可以传递动态内容 -->
+        <html2 v-slot:username>hanmeimei</html2>
+    </div>
+    <template id="html1">
+        <div>
+            hello
+            <slot>lilei</slot>
+        </div>
+    </template>
+    <template id="html2">
+        <div>
+            Im not ok
+            <!-- 如果是命名插槽，那么只会显示两种内容，1 v-slot传递的动态内容， 2 否则就是默认内容 -->
+            <slot name="username">lilei</slot>
+        </div>
+    </template>
+</body>
+<script>
+    const app = new Vue({
+        el : '#app',
+        components:{
+            html1 : {
+                template : '#html1',
+            },
+            html2 : {
+                template : '#html2'
+            }
+        }
+    })
+</script>
+</html>

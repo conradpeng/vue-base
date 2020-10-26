@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义组件</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+       <div v-red>ssss</div>
+       <div v-color="'blue'">dddd</div>
+    </div>
+</body>
+<script>
+    //全局指令
+    Vue.directive('red', {
+        //绑定时触发，且只会触发一次 (可以理解为初始化时即绑定)
+        bind: function(el, val){
+            //css 中的 - 关联的属性，需要改写成驼峰式
+            el.style.backgroundColor = 'red';
+        },
+        //被绑定的元素被插入DOM时调用
+        inserted: function(el){
+
+        },
+        //元素更新时触发
+        updated: function(el){
+
+        }
+    });
+    let vm = new Vue({
+        el: '#app',
+        data() {
+            return {
+                color:{
+                    backgroundColor : 'blue'
+                }
+            }
+        },
+        directives: {
+            'color' : {
+                bind: function(el, param){
+                    el.style.backgroundColor = param.value;
+                },
+                inserted: function(){
+
+                }
+            }
+        }
+    })
+</script>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        .error{
+            color: red;
+        }
+        .success{
+            color: green;
+        }
+        .warning{
+            color: orange;
+        }
+        .font{
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div :class="{error:true}">error</div>
+        <div :class="{error:isError}">error2</div>
+        <div :class="errorClass">error3</div>
+
+        <div class="warning" :class="{font:true}">warning1</div>
+        <!--利用数组，可以绑定多个class-->
+        <div :class="['warning', 'font']">warning2</div>
+        <div :class="['warning', {font:true}]">warning3</div>
+
+        <div :class="nameClass">jack</div>
+        <button @click="changeType">click</button>
+
+
+    </div>
+</body>
+<script>
+    let vm = new Vue({
+        el: "#app",
+        data() {
+            return {
+                isError:false,
+                errorClass:{
+                    error:true,
+                    font:true
+                },
+                nameClass:{
+                    success: false,
+                    warning: false,
+                    error: true,
+                    font: true
+                }
+            }
+        },
+        methods: {
+            changeType: function(){
+                this.nameClass.success = !this.nameClass.success;
+                this.nameClass.error = !this.nameClass.error;
+            }
+        },
+    })
+</script>
+</html>

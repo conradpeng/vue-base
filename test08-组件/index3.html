@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        img{
+            height: 100px;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <userlistcom :getuserlist="userlist"></userlistcom>
+        <component :is="comname" :getuserlist="userlist"></component>
+    </div>
+</body>
+
+<template id="userlistcom"> 
+    <div>
+        <ul>
+            <li v-for="user in getuserlist">
+                <img :src="user.img" alt="">
+                <span>{{user.name}}</span>
+                <span>{{user.age}}</span>
+                <span>{{user.sex == 1 ? '男' : '女'}}</span>
+            </li>
+        </ul>
+    </div>
+</template>
+
+<script>
+    let vm = new Vue({
+        el : "#app",
+        data() {
+            return {
+                userlist:[],
+                comname: 'userlistcom'
+            }
+        },
+        components:{
+            'userlistcom' : {
+                template: '#userlistcom',
+                props:{
+                    getuserlist: {
+                        type: Array,
+                        required: true
+                    }
+                }
+            }
+        },
+
+        created() {
+            this.loadData();
+        },
+        methods: {            
+            loadData(){
+                console.log('正在加载数据。。');
+                this.userlist = [
+                    {
+                        name:"张三",
+                        age:"20",
+                        sex:"1",
+                        img:"https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=682895161,2056544872&fm=111&gp=0.jpg",
+                        remember: 1,
+                        area:"3"
+                    },
+                    {
+                        name:"小花",
+                        age:"22",
+                        sex:"2",
+                        img:"https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3999162594,1780997618&fm=111&gp=0.jpg",
+                        remember: 0,
+                        area:"2"
+                    }
+                ];
+                console.log('数据加载完成。。');
+            }
+        },
+    })
+</script>
+</html>

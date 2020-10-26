@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        img{
+            height: 100px;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- 图片绑定 -->
+        <img v-bind:src="user.img" alt=""><br>
+        <!-- 单选框绑定 -->
+        男：<input type="radio" name="sex" id="" v-bind:checked="user.sex == 1">
+        女：<input type="radio" name="sex" id="" v-bind:checked="user.sex == 2"><br>
+        <!-- 复选框绑定 -->
+        是否记住：<input type="checkbox" name="" id="" v-bind:checked="user.remember"><br>
+        <!-- 下拉框绑定 -->
+        <select name="" id="">
+            <option value="" v-for="city in area" v-bind:selected="city.num == user.city1">{{city.content}}</option>
+        </select>
+        <ul>
+            <li v-for="user,key in userList">
+                <!--双向绑定单选框-->
+                男：<input type="radio" v-bind:name="'sex'+key" value="1" v-model="user.sex">
+                女：<input type="radio" v-bind:name="'sex'+key" value="2" v-model="user.sex"><br>
+                <!-- 复选框 -->
+                记住选择：<input type="checkbox" :name="'rem'+key" v-model="user.remember">
+                <!-- 下拉框 -->
+                <select name="" v-model="user.area">
+                    <option :value="city.num" v-for="city in area">{{city.content}}</option>
+                </select>
+                <!-- 输入框 -->
+                <input type="text" :name="'name'+key" v-model="user.name">
+            </li>
+        </ul>
+    </div>
+</body>
+<script>
+    let vm = new Vue({
+        el: "#app",
+        data() {
+            return {
+                user:{
+                    name: "张三",
+                    age: 23,
+                    img: "https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=682895161,2056544872&fm=111&gp=0.jpg",
+                    sex: 2,
+                    remember: true,
+                    city1: 3
+                },
+                sex: [{num:1, type:"男"},{num:2, type:"女"}],
+                area: [{num:1, content:"北京"},{num:2, content:"西安"},{num:3, content:"上海"}],
+                userList : [
+                    {
+                        name:"张三",
+                        age:"20",
+                        sex:"1",
+                        img:"https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=682895161,2056544872&fm=111&gp=0.jpg",
+                        remember: 1,
+                        area:"3"
+                    },
+                    {
+                        name:"小花",
+                        age:"22",
+                        sex:"2",
+                        img:"https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3999162594,1780997618&fm=111&gp=0.jpg",
+                        remember: 0,
+                        area:"2"
+                    }
+                ]
+            }
+        },
+    })
+</script>
+</html>

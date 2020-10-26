@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <!--容器-->
+    <div id="app">
+        <!-- 文本差值 -->
+        <!-- 字符串 -->
+        {{type}}<br>
+        <!-- 对象 -->
+        {{userListObj}}<br>
+        <!-- 对象中的值 -->
+        {{userListObj.name}}<br>
+        <!-- 数组 -->
+        {{userList}}<br>
+        <!-- 数组中的值 -->
+        {{userList[0].name}}
+        <!-- v-for数组遍历 -->
+        <ul>
+            <li v-for="user,index in userList">{{index}}--{{user.name}}:{{user.age}}</li>
+        </ul>
+        <!-- v-for遍历对象 -->
+        <ul>
+            <li v-for="user,key,index in userListObj" :key="index">{{index}}--{{key}}:{{user}}</li>
+        </ul>
+        <!-- 直接使用js语法 -->
+        {{ }}
+        <!-- html直接渲染 v-html-->
+        <div v-html="userHtml"></div>
+    </div>    
+</body>
+<script>
+    //实例化vue
+    let vm = new Vue({
+        el: '#app',
+        data() {
+            return {
+            //定义数字
+                num: 23,
+            //定义字符串
+                type: 'vue test',
+            //定义数组
+                userList: [
+                    {
+                        name:'张三',
+                        age:23, 
+                        sex:'男'
+                    },
+                    {
+                        name:'李四',
+                        age:25,
+                        sex:'男'
+                    },
+                    {
+                        name:'小花',
+                        age:33,
+                        sex:'女'
+                    }
+                ],
+            //定义对象
+                userListObj: {
+                    name:'张三', age:23, sex:'男'
+                },
+
+                userHtml:'<p>fsdf</p>'
+            }
+        }
+    })
+
+</script>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <!--容器-->
+    <div id="app">
+        <!-- if的使用 -->
+        <div v-if="showDiv">ssss</div>
+        <div v-show="showDiv">dddd</div>
+        <button @click="showDivBt()">aaaa</button>
+        <!-- show的使用 -->
+        
+    </div>    
+</body>
+<script>
+    //实例化vue
+    let vm = new Vue({
+        el: '#app',
+        data() {
+            return {
+            //定义数字
+                num: 23,
+            //定义字符串
+                type: 'vue test',
+            //定义数组
+                userList: [
+                    {
+                        name:'张三',
+                        age:23, 
+                        sex:'男'
+                    },
+                    {
+                        name:'李四',
+                        age:25,
+                        sex:'男'
+                    },
+                    {
+                        name:'小花',
+                        age:33,
+                        sex:'女'
+                    }
+                ],
+            //定义对象
+                userListObj: {
+                    name:'张三', age:23, sex:'男'
+                },
+
+                userHtml:'<p>fsdf</p>',
+
+                showDiv: true
+            }
+        },
+        methods: {
+            showDivBt(){
+                this.showDiv = !this.showDiv;
+            }
+        },
+    })
+
+</script>
+</html>

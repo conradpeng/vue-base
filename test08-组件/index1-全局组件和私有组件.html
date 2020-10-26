@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <private></private>
+        <public></public>
+    </div>
+    <private></private>
+
+    <template id="private">
+        <div>
+            我是私有组件            
+        </div>
+    </template>
+    <template id="public">
+        <div style="background: chartreuse;">
+            我是全局组件
+        </div>
+    </template>
+</body>
+<script>
+    Vue.component('public', {
+        template: '#public'
+    })
+    let vm = new Vue({
+        el: "#app",
+        components:{
+            'private':{
+                template: '#private'
+            }
+        }
+    })
+</script>
+</html>

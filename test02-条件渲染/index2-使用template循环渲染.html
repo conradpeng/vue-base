@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <ul>
+            <li v-for="city in cities">{{city.name}}</li>
+            <li>--------</li>
+        </ul>
+
+        <ul v-for="city in cities">
+            <li>{{city.name}}</li>
+            <li>--------</li>
+        </ul>
+
+        <!-- 可以使用template进行区块渲染 -->
+        <ul>
+            <template v-for="city in cities">
+                <li>{{city.name}}</li>
+                <li>--------</li>
+            </template>
+        </ul>
+    </div>
+</body>
+<script>
+    const app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                cities: [
+                    {count: 1, name: '北京'},
+                    {count: 2, name: '上海'},
+                    {count: 3, name: '广州'}
+                ]
+            }
+        },
+    })
+</script>
+</html>

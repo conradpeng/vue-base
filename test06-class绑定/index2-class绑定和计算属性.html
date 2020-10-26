@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<style>
+    .red{
+        color: red;
+    }
+    .big-font {
+        font-size: 40px;
+    }
+</style>
+<body>
+    <div id="app">
+        <div :class="getDivClass">试试</div>
+        <button @click="change">改变</button>
+    </div>
+</body>
+<script>
+    const app = new Vue({
+        el : '#app',
+        data() {
+            return {
+                type: 'default'
+            }
+        },
+        computed: {
+            getDivClass : function(){
+                // ... 一些判断 逻辑 ...
+                return this.type == 'red' ? {
+                    red: true,
+                    'big-font': true
+                } : {};
+            }
+        },
+        methods: {
+            change(){
+                this.type = 'red';
+            }
+        },
+    })
+</script>
+</html>

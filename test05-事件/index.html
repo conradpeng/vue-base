@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <button v-on:click="count++">add 1</button>
+        <button v-on:click="add">add 1</button>
+        <div>{{count}}</div>
+
+        <ul>
+            <li v-for="user in userList">
+                <img style="height: 100px;width: 100px;" :src="user.img" alt="">
+                <span>{{user.name}}</span>
+                <span>{{user.age}}</span>
+            </li>
+        </ul>
+        <form action="" v-on:submit.prevent="onSubmit">
+            <input type="text" name="name" id="" v-model="newUser.name">
+            <input type="text" name="age" id="" v-model="newUser.age">
+            <input type="text" name="img" id="" v-model="newUser.img">
+            <button type="submit">注册</button>
+        </form>
+        <form action="">
+            <input type="text" name="name" id="" v-model="newUser.name">
+            <input type="text" name="age" id="" v-model="newUser.age">
+            <input type="text" name="img" id="" v-model="newUser.img" v-on:keyup.enter="onSubmit">
+        </form>
+    </div>
+</body>
+<script>
+    let vm = new Vue({
+        el: "#app",
+        data() {
+            return {
+                count: 0,
+                area: [{num:1, content:"北京"},{num:2, content:"西安"},{num:3, content:"上海"}],
+                userList: [],
+                newUser: {}
+            }
+        },
+        methods: {
+            add: function(){
+                this.count ++;
+            },
+            init1: function(){
+                this.userList = [
+                    {
+                        name:"张三",
+                        age:"20",
+                        sex:"1",
+                        img:"https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=682895161,2056544872&fm=111&gp=0.jpg",
+                        area:"3"
+                    },
+                    {
+                        name:"小花",
+                        age:"22",
+                        sex:"2",
+                        img:"https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3999162594,1780997618&fm=111&gp=0.jpg",
+                        area:"2"
+                    }
+                ];
+            },
+            onSubmit : function(){
+                const newUserObj = JSON.parse(JSON.stringify(this.newUser));//拷贝一个newUser对象，而非将newUser对象本身追加至userlist,因为双向绑定的原因，追加进去的对象会跟着数据的变化而变化
+                this.userList.push(newUserObj);
+            }
+        },
+        created() {
+            this.init1();
+        },
+        
+    })
+</script>
+</html>

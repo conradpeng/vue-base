@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <usercom :personaldata="user"></usercom>
+    </div>
+</body>
+
+<template id="usercom">
+    <div>
+        <div>{{personaldata.name}}</div>        
+        <div>{{personaldata.age}}</div>
+        <div>{{personaldata.sex}}</div>
+    </div>
+</template>
+
+<script>
+    let vm = new Vue({
+        el: "#app",
+        data() {
+            return {
+                user:{}
+            }
+        },
+        components:{
+            'usercom' : {
+                template: '#usercom',
+                props:{
+                    personaldata : {
+                        type: Object,
+                        required: true
+                    }
+                }
+            }
+        },
+        methods: {
+            init:function(){
+                const dataObj = {
+                    name: "张三",
+                    age: 23,
+                    sex: 1
+                }
+                this.user = dataObj;
+            }
+        },
+        created() {
+            this.init();
+        },
+    })
+</script>
+</html>

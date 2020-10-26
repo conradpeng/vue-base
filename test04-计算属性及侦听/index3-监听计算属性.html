@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>监听计算属性</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input type="range" name="" id="" v-model="range.fontSize">
+    </div>
+</body>
+<script>
+    const app = new Vue({
+        el : '#app',
+        data() {
+            return {
+                range:{
+                    fontSize: 23,
+                    name: '进度条'
+                }
+            }
+        },
+        computed: {
+            fontSize : function(){
+                return this.range.fontSize;
+            }
+        },
+        watch: {
+            fontSize : function(val, oldval){
+                if(val > 50){
+                    console.log(val);
+                    this.range.fontSize = oldval;
+                }
+            }
+        },
+    })
+</script>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        .option{
+            height: 50px;
+            cursor: pointer;
+        }
+        .active{
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div :class="['option', {active: currentClicked == 1}]" @click="changeColor(1)">回复我的</div>
+        <div :class="['option', {active: currentClicked == 2}]" @click="changeColor(2)">@我的</div>
+        <div :class="['option', {active: currentClicked == 3}]" @click="changeColor(3)">收到赞的</div>
+    </div>
+</body>
+<script>
+    let vm = new Vue({
+        el: "#app",
+        data() {
+            return {
+                currentClicked:0,
+                highLight: {active: false}
+            }
+        },
+        methods: {
+            changeColor : function(num){
+                this.currentClicked = num;
+            }
+        },
+    })
+</script>
+</html>

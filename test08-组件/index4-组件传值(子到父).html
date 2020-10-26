@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        img{
+            height: 100px;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <userlistcom :getuserlist="userlist"></userlistcom>
+        <!-- 父组件监听了event这个自定义事件，同时触发了getsubmit这个方法 -->
+        <formcom @event="getsubmit"></formcom>
+    </div>
+</body>
+
+<template id="userlistcom"> 
+    <div>
+        <ul>
+            <li v-for="user in getuserlist">
+                <img :src="user.img" alt="">
+                <span>{{user.name}}</span>
+                <span>{{user.age}}</span>
+                <span>{{user.sex == 1 ? '男' : '女'}}</span>
+            </li>
+        </ul>
+    </div>
+</template>
+
+<template id="formcom">
+    <div>
+        <form action="" @submit.prevent="submit">
+        姓名：<input type="text" name="name" id="" v-model="userinfo.name"><br>
+        年龄：<input type="text" name="age" id="" v-model="userinfo.age"><br>
+        头像：<input type="text" name="img" id="" v-model="userinfo.img"><br>
+        性别：
+        <select name="sex" id="" v-model="userinfo.sex">
+            <option :value="sex.num" v-for="sex in sexlist">{{sex.type}}</option>
+        </select><br>
+        <input type="submit" value="提交">
+        </form>
+    </div>
+</template>
+
+<script>
+    let vm = new Vue({
+        el : "#app",
+        data() {
+            return {
+                userlist:[],
+            }
+        },
+        components:{
+            'userlistcom' : {
+                template: '#userlistcom',
+                props:{
+                    getuserlist: {
+                        type: Array,
+                        required: true
+                    }
+                }
+            },
+
+            'formcom' : {
+                template: '#formcom',
+                data() {
+                    return {
+                        sexlist : [
+                            {num : '1', type : '男'},
+                            {num : '2', type : '女'}
+                        ],
+                        userinfo : {}
+                    }
+                },
+                methods: {
+                    submit : function(){
+                        //发送数据, 这里自定义了一个事件 event, 同时抛出了一个值 即新用户的数据
+                        this.$emit('event', this.userinfo);
+                    }
+                },
+            }
+        },
+
+        created() {
+            this.loadData();
+        },
+        methods: {
+            getsubmit : function(newuser){
+                //父组件接收传值，并追加数据至 userlist 中
+                newuser = JSON.parse(JSON.stringify(newuser));
+                this.userlist.push(newuser);
+            },
+            loadData(){
+                console.log('正在加载数据。。');
+                this.userlist = [
+                    {
+                        name:"张三",
+                        age:"20",
+                        sex:"1",
+                        img:"https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=682895161,2056544872&fm=111&gp=0.jpg",
+                        remember: 1,
+                        area:"3"
+                    },
+                    {
+                        name:"小花",
+                        age:"22",
+                        sex:"2",
+                        img:"https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3999162594,1780997618&fm=111&gp=0.jpg",
+                        remember: 0,
+                        area:"2"
+                    }
+                ];
+                console.log('数据加载完成。。');
+            }
+        },
+    })
+</script>
+</html>
